@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  # --- Static analysis: Python ---
+  bandit:
+    image: python:3.11
+    build:
+      context: ./scanners
+      dockerfile: Dockerfile.bandit
+    volumes:
+      - .:/app
+    command: ["bandit", "-r", "/code"]
+
+  # --- Execution Sandbox ---
+  sandbox:
+    build:
+      context: ./runner
+      dockerfile: Dockerfile.python
+    volumes:
+      - ./code:/work
+    command: ["python", "/work/app.py"]
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+    network_mode: none   # no internet access

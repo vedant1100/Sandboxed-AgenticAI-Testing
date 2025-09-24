@@ -1,0 +1,7 @@
+FROM python:3.11-slim
+
+# Drop root privileges
+RUN useradd -ms /bin/bash sandboxuser
+USER sandboxuser
+
+WORKDIR /work
