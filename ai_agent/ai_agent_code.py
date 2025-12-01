@@ -26,7 +26,7 @@ except Exception as e:
 
 
 def generate_ai_code(prompt: str) -> str:
-    print(f"🤖 Gemini Agent: Receiving task... \"{prompt}\"")
+    print(f" Gemini Agent: Receiving task... \"{prompt}\"")
     instruction = """You are an expert Python programming assistant.
 Your sole purpose is to generate clean, runnable, and self-contained Python code in response to a user's request.
 DO NOT provide any explanations, comments, or narrative.
@@ -71,3 +71,18 @@ def extract_python_code(text: str) -> str | None:
 if __name__ == "__main__":
     task = input("Enter a prompt : ")
     generated_code = generate_ai_code(task)
+    
+    # Save the response to app.txt (overwrites existing content)
+    # Get the script's directory and navigate to the root code/app.txt
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    root_dir = os.path.dirname(script_dir)  # Go up one level from ai_agent/ to root
+    app_txt_path = os.path.join(root_dir, "code", "app.txt")
+    try:
+        # Ensure the directory exists
+        os.makedirs(os.path.dirname(app_txt_path), exist_ok=True)
+        # Open in write mode to replace old content with new content
+        with open(app_txt_path, "w", encoding="utf-8") as f:
+            f.write(generated_code)
+        print(f"\n Response saved to {app_txt_path} (replaced previous content)")
+    except Exception as e:
+        print(f"Error saving to file: {e}")
